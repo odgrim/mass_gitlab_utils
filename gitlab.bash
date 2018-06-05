@@ -9,10 +9,12 @@ function __mass_gitlab_utils_generate_request() {
 }
 
 function __mass_gitlab_utils_get_last_pagination_page_of_object() {
+    paginated_object=$1
     # gitlab apis are paginated. Grab the first page of an object and extract the "last" page number
-    object_pages=$(__mass_gitlab_utils_generate_request "GET" "${paginated_object}" "-I" \?per_page=100 | egrep "X-Total-Pages")
+    object_pages=$(__mass_gitlab_utils_generate_request "GET" "${paginated_object}" "-I" \?per_page=100)
+
     # Regex to match the "last page"
-    regex_pattern='X-Total-Pages: ([0-9]+)'
+    regex_pattern='x-total-pages: ([0-9]+)'
     [[ ${object_pages[@]} =~ $regex_pattern ]]
     # Grab the "last page"
     [[ $object_pages =~ $regex_pattern ]]
